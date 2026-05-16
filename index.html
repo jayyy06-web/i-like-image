@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>i like image — Smart Image Tools for E-Commerce</title>
+<meta name="description" content="Free online image tools for e-commerce: compress, convert, and resize images in bulk. Supports PNG, JPG, WebP. Amazon, Flipkart, Shopify presets included.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <div class="logo">i <span>like</span> image</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-tab="compress" onclick="switchTab('compress', this)"><i class="fa fa-compress-alt" style="margin-right:5px;font-size:11px"></i>Compress</button>
+    <button class="nav-tab" data-tab="convert" onclick="switchTab('convert', this)"><i class="fa fa-exchange-alt" style="margin-right:5px;font-size:11px"></i>Convert</button>
+    <button class="nav-tab" data-tab="resize" onclick="switchTab('resize', this)"><i class="fa fa-expand-alt" style="margin-right:5px;font-size:11px"></i>Resize</button>
+  </div>
+  <div class="nav-right">
+    <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+      <div id="backendDot" style="width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0"></div>
+      <span id="backendLbl" style="font-size:11px;color:var(--text3);white-space:nowrap">Checking backend...</span>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">
+      <i class="fa fa-moon" id="themeIcon"></i>
+    </button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ═══════════════════════ COMPRESS PANEL ═══════════════════════ -->
+  <div class="panel active" id="panel-compress">
+
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="dropZone-compress" onclick="triggerInput('compress')">
+      <input type="file" id="fileInput-compress" multiple accept="image/*">
+      <div class="drop-icon"><i class="fa fa-cloud-upload-alt"></i></div>
+      <div class="drop-title">Drop images here or click to upload</div>
+      <div class="drop-sub">Bulk upload supported — PNG, JPG, WebP, AVIF</div>
+      <div class="drop-formats">
+        <span class="fmt-badge">PNG</span>
+        <span class="fmt-badge">JPG</span>
+        <span class="fmt-badge">WEBP</span>
+        <span class="fmt-badge">AVIF</span>
+      </div>
+    </div>
+
+    <div style="height:1.5rem"></div>
+
+    <!-- ── Mode Toggle Bar ── -->
+    <div class="mode-toggle-bar">
+      <button class="mode-btn active" id="modeBtn-smart" onclick="setCompressMode('smart')">
+        <i class="fa fa-magic"></i> Smart Mode
+        <span class="mode-badge">Recommended</span>
+      </button>
+      <button class="mode-btn" id="modeBtn-manual" onclick="setCompressMode('manual')">
+        <i class="fa fa-sliders-h"></i> Manual Mode
+      </button>
+      <div class="pixel-guarantee">
+        <i class="fa fa-check-circle"></i> Pixels always preserved
+      </div>
+    </div>
+
+    <!-- ── SMART Settings ── -->
+    <div id="smartSettings" class="settings-grid">
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-star"></i> Max Quality</div>
+        <div class="range-wrap" style="margin-top:1.5rem">
+          <span class="range-display" id="smartQualDisp">90%</span>
+          <input type="range" min="50" max="100" value="90" id="smartQuality"
+            oninput="document.getElementById('smartQualDisp').textContent=this.value+'%'">
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <span style="font-size:11px;color:var(--text3)">Smaller file</span>
+          <span style="font-size:11px;color:var(--text3)">Max quality</span>
+        </div>
+        <div style="margin-top:8px;font-size:11px;color:var(--accent2)">
+          <i class="fa fa-robot" style="margin-right:4px"></i>Auto picks best format (WebP / JPEG)
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label">
+          <i class="fa fa-bullseye"></i> Target File Size
+          <span style="font-size:10px;font-weight:400;color:var(--text3);margin-left:4px">(optional)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <input type="number" id="targetKB" placeholder="e.g. 500" min="10" max="51200" style="flex:1">
+          <span style="font-size:13px;color:var(--text2);flex-shrink:0;font-weight:600">KB</span>
+        </div>
+        <div style="margin-top:8px;font-size:11px;color:var(--text3)">
+          Leave blank to auto-optimize. Binary search finds best quality to hit target.
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-tag"></i> Batch Rename</div>
+        <div class="rename-row">
+          <input type="text" id="renamePrefix-compress" placeholder="e.g. product, SKU001" maxlength="40">
+        </div>
+        <div class="preview-name">
+          Preview: <span id="renamePreview-compress">original_name.jpg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MANUAL Settings ── -->
+    <div id="manualSettings" class="settings-grid" style="display:none">
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-sliders-h"></i> Quality</div>
+        <div class="range-wrap" style="margin-top:1.5rem">
+          <span class="range-display" id="qualDisp-compress">82%</span>
+          <input type="range" min="10" max="100" value="82" id="quality-compress"
+            oninput="document.getElementById('qualDisp-compress').textContent=this.value+'%'">
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <span style="font-size:11px;color:var(--text3)">Smaller file</span>
+          <span style="font-size:11px;color:var(--text3)">Best quality</span>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-file-image"></i> Output Format</div>
+        <select id="format-compress">
+          <option value="same">Same as input</option>
+          <option value="image/jpeg">JPEG</option>
+          <option value="image/png">PNG</option>
+          <option value="image/webp">WebP</option>
+        </select>
+        <div style="margin-top:10px;font-size:11px;color:var(--text3)">
+          WebP = best compression, same quality
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-tag"></i> Batch Rename</div>
+        <div class="rename-row">
+          <input type="text" id="renamePrefix-compress-manual" placeholder="e.g. product, SKU001" maxlength="40">
+        </div>
+        <div class="preview-name">
+          Preview: <span id="renamePreview-compress-manual">original_name.jpg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <button class="btn-primary" id="processBtn-compress" onclick="processFiles('compress')" disabled>
+        <i class="fa fa-bolt"></i> Compress All
+      </button>
+      <button class="btn-secondary" onclick="clearFiles('compress')">
+        <i class="fa fa-trash"></i> Clear
+      </button>
+      <div class="progress-bar-wrap" id="progressWrap-compress" style="display:none">
+        <div class="progress-bar-fill" id="progressFill-compress"></div>
+      </div>
+      <div class="file-count" id="fileCount-compress">
+        <span id="fileCountNum-compress">0</span> files
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar-compress" style="display:none">
+      <div class="stat-card">
+        <div class="stat-val" id="stat-saved">0%</div>
+        <div class="stat-lab">SIZE SAVED</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-orig">0</div>
+        <div class="stat-lab">ORIGINAL MB</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-new">0</div>
+        <div class="stat-lab">NEW MB</div>
+      </div>
+    </div>
+
+    <!-- Before/After Preview -->
+    <div class="preview-section" id="previewSection-compress">
+      <div class="section-title"><i class="fa fa-eye"></i> Before / After Preview</div>
+      <div class="preview-grid">
+        <div class="preview-box">
+          <div class="preview-empty" id="beforeEmpty">
+            <i class="fa fa-image"></i>
+            <p>Select an image to preview</p>
+          </div>
+          <div id="beforeImg" style="display:none">
+            <div style="position:relative">
+              <img id="beforeImgEl" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Before">
+              <div class="preview-label">BEFORE</div>
+            </div>
+            <div class="preview-meta">
+              <span id="beforeSize">—</span>
+              <span id="beforeDims">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="preview-box">
+          <div class="preview-empty" id="afterEmpty">
+            <i class="fa fa-magic"></i>
+            <p>Output appears after compress</p>
+          </div>
+          <div id="afterImg" style="display:none">
+            <div style="position:relative">
+              <img id="afterImgEl" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="After">
+              <div class="preview-label" style="background:rgba(34,211,160,0.85)">AFTER</div>
+            </div>
+            <div class="preview-meta">
+              <span id="afterSize" style="color:var(--green)">—</span>
+              <span id="afterDims">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- File List -->
+    <div class="section-title" id="fileListTitle-compress" style="display:none">
+      <i class="fa fa-images"></i> Files
+    </div>
+    <div class="file-list" id="fileList-compress"></div>
+
+    <!-- Download -->
+    <div class="download-bar" id="downloadBar-compress" style="display:none">
+      <button class="btn-download" id="downloadBtn-compress" onclick="downloadAll('compress')" disabled>
+        <i class="fa fa-download"></i> Download All (ZIP)
+      </button>
+      <span style="font-size:12px;color:var(--text2)">All compressed images ready</span>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════ CONVERT PANEL ═══════════════════════ -->
+  <div class="panel" id="panel-convert">
+    <div class="drop-zone" id="dropZone-convert" onclick="triggerInput('convert')">
+      <input type="file" id="fileInput-convert" multiple accept="image/*">
+      <div class="drop-icon"><i class="fa fa-exchange-alt"></i></div>
+      <div class="drop-title">Drop images to convert format</div>
+      <div class="drop-sub">PNG to JPEG, JPEG to WebP, any to AVIF and more</div>
+      <div class="drop-formats">
+        <span class="fmt-badge">PNG</span>
+        <span class="fmt-badge">to</span>
+        <span class="fmt-badge">JPEG</span>
+        <span class="fmt-badge">WEBP</span>
+        <span class="fmt-badge">AVIF</span>
+      </div>
+    </div>
+
+    <div style="height:1.5rem"></div>
+
+    <div class="settings-grid">
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-arrow-right"></i> Convert To</div>
+        <select id="format-convert">
+          <option value="image/jpeg">JPEG — Best for photos</option>
+          <option value="image/png">PNG — Lossless, transparency</option>
+          <option value="image/webp">WebP — Best compression</option>
+        </select>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-sliders-h"></i> Quality</div>
+        <div class="range-wrap" style="margin-top:1.5rem">
+          <span class="range-display" id="qualDisp-convert">90%</span>
+          <input type="range" min="10" max="100" value="90" id="quality-convert"
+            oninput="document.getElementById('qualDisp-convert').textContent=this.value+'%'">
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <span style="font-size:11px;color:var(--text3)">Smaller</span>
+          <span style="font-size:11px;color:var(--text3)">Lossless</span>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-tag"></i> Batch Rename</div>
+        <div class="rename-row">
+          <input type="text" id="renamePrefix-convert" placeholder="e.g. product, SKU001" maxlength="40">
+        </div>
+        <div class="preview-name">
+          Preview: <span id="renamePreview-convert">original_name.jpg</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-primary" id="processBtn-convert" onclick="processFiles('convert')" disabled>
+        <i class="fa fa-exchange-alt"></i> Convert All
+      </button>
+      <button class="btn-secondary" onclick="clearFiles('convert')">
+        <i class="fa fa-trash"></i> Clear
+      </button>
+      <div class="progress-bar-wrap" id="progressWrap-convert" style="display:none">
+        <div class="progress-bar-fill" id="progressFill-convert"></div>
+      </div>
+      <div class="file-count" id="fileCount-convert">
+        <span id="fileCountNum-convert">0</span> files
+      </div>
+    </div>
+
+    <div class="section-title" id="fileListTitle-convert" style="display:none">
+      <i class="fa fa-images"></i> Files
+    </div>
+    <div class="file-list" id="fileList-convert"></div>
+
+    <div class="download-bar" id="downloadBar-convert" style="display:none">
+      <button class="btn-download" id="downloadBtn-convert" onclick="downloadAll('convert')" disabled>
+        <i class="fa fa-download"></i> Download All (ZIP)
+      </button>
+      <span style="font-size:12px;color:var(--text2)">All converted images ready</span>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════ RESIZE PANEL ═══════════════════════ -->
+  <div class="panel" id="panel-resize">
+    <div class="drop-zone" id="dropZone-resize" onclick="triggerInput('resize')">
+      <input type="file" id="fileInput-resize" multiple accept="image/*">
+      <div class="drop-icon"><i class="fa fa-expand-alt"></i></div>
+      <div class="drop-title">Drop images to resize</div>
+      <div class="drop-sub">Set exact pixels — E-commerce presets included</div>
+      <div class="drop-formats">
+        <span class="fmt-badge">AMAZON</span>
+        <span class="fmt-badge">FLIPKART</span>
+        <span class="fmt-badge">MEESHO</span>
+        <span class="fmt-badge">SHOPIFY</span>
+        <span class="fmt-badge">CUSTOM</span>
+      </div>
+    </div>
+
+    <div style="height:1.5rem"></div>
+
+    <div class="setting-card" style="margin-bottom:14px">
+      <div class="setting-label"><i class="fa fa-store"></i> Platform Presets</div>
+      <div class="presets-row" id="presetRow">
+        <button class="preset-btn" onclick="applyPreset(1000,1000,this)">Amazon 1000x1000</button>
+        <button class="preset-btn" onclick="applyPreset(500,500,this)">Flipkart 500x500</button>
+        <button class="preset-btn" onclick="applyPreset(800,800,this)">Meesho 800x800</button>
+        <button class="preset-btn" onclick="applyPreset(2048,2048,this)">Shopify 2048x2048</button>
+        <button class="preset-btn" onclick="applyPreset(1080,1080,this)">Instagram 1080x1080</button>
+        <button class="preset-btn" onclick="applyPreset(1600,1800,this)">Portrait 1600x1800</button>
+        <button class="preset-btn" onclick="applyPreset(0,0,this)" id="customPresetBtn">Custom</button>
+      </div>
+    </div>
+
+    <div class="settings-grid">
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-ruler-combined"></i> Dimensions (px)</div>
+        <div class="size-inputs">
+          <input type="number" id="resizeW" value="1000" min="1" max="8000" placeholder="Width">
+          <span class="size-x">x</span>
+          <input type="number" id="resizeH" value="1000" min="1" max="8000" placeholder="Height">
+        </div>
+        <div style="margin-top:10px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text2)">
+            <input type="checkbox" id="keepRatio" checked style="width:auto;accent-color:var(--accent)">
+            Maintain aspect ratio
+          </label>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-sliders-h"></i> Quality</div>
+        <div class="range-wrap" style="margin-top:1.5rem">
+          <span class="range-display" id="qualDisp-resize">90%</span>
+          <input type="range" min="10" max="100" value="90" id="quality-resize"
+            oninput="document.getElementById('qualDisp-resize').textContent=this.value+'%'">
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px">
+          <span style="font-size:11px;color:var(--text3)">Smaller</span>
+          <span style="font-size:11px;color:var(--text3)">Lossless</span>
+        </div>
+      </div>
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-tag"></i> Batch Rename</div>
+        <input type="text" id="renamePrefix-resize" placeholder="e.g. product, SKU001" maxlength="40">
+        <div class="preview-name">
+          Preview: <span id="renamePreview-resize">original_name.jpg</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-primary" id="processBtn-resize" onclick="processFiles('resize')" disabled>
+        <i class="fa fa-expand-alt"></i> Resize All
+      </button>
+      <button class="btn-secondary" onclick="clearFiles('resize')">
+        <i class="fa fa-trash"></i> Clear
+      </button>
+      <div class="progress-bar-wrap" id="progressWrap-resize" style="display:none">
+        <div class="progress-bar-fill" id="progressFill-resize"></div>
+      </div>
+      <div class="file-count" id="fileCount-resize">
+        <span id="fileCountNum-resize">0</span> files
+      </div>
+    </div>
+
+    <div class="section-title" id="fileListTitle-resize" style="display:none">
+      <i class="fa fa-images"></i> Files
+    </div>
+    <div class="file-list" id="fileList-resize"></div>
+
+    <div class="download-bar" id="downloadBar-resize" style="display:none">
+      <button class="btn-download" id="downloadBtn-resize" onclick="downloadAll('resize')" disabled>
+        <i class="fa fa-download"></i> Download All (ZIP)
+      </button>
+      <span style="font-size:12px;color:var(--text2)">All resized images ready</span>
+    </div>
+  </div>
+
+</main>
+
+<!-- Mobile Bottom Nav -->
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <button class="mobile-nav-btn active" onclick="switchTab('compress', this)" data-tab="compress">
+    <i class="fa fa-compress-alt"></i>
+    <span>Compress</span>
+  </button>
+  <button class="mobile-nav-btn" onclick="switchTab('convert', this)" data-tab="convert">
+    <i class="fa fa-exchange-alt"></i>
+    <span>Convert</span>
+  </button>
+  <button class="mobile-nav-btn" onclick="switchTab('resize', this)" data-tab="resize">
+    <i class="fa fa-expand-alt"></i>
+    <span>Resize</span>
+  </button>
+</nav>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- JSZip for bulk download -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script src="script.js"></script>
+</body>
+</html>
