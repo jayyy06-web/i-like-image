@@ -1,31 +1,51 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "server.py",
-      "use": "@vercel/python"
-    },
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "styles.css",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "script.js",
-      "use": "@vercel/static"
-    }
+    { "src": "server.py",    "use": "@vercel/python" },
+    { "src": "index.html",   "use": "@vercel/static" },
+    { "src": "styles.css",   "use": "@vercel/static" },
+    { "src": "script.js",    "use": "@vercel/static" },
+    { "src": "robots.txt",   "use": "@vercel/static" },
+    { "src": "sitemap.xml",  "use": "@vercel/static" },
+    { "src": "manifest.json","use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/api/(.*)", "dest": "server.py" },
     {
-      "src": "/api/(.*)",
-      "dest": "server.py"
+      "src": "/robots.txt",
+      "dest": "/robots.txt",
+      "headers": { "Content-Type": "text/plain; charset=utf-8" }
     },
     {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "src": "/sitemap.xml",
+      "dest": "/sitemap.xml",
+      "headers": { "Content-Type": "application/xml; charset=utf-8" }
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json",
+      "headers": { "Content-Type": "application/manifest+json; charset=utf-8" }
+    },
+    { "src": "/(.*)", "dest": "/$1" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options",    "value": "nosniff" },
+        { "key": "X-Frame-Options",           "value": "DENY" },
+        { "key": "X-XSS-Protection",          "value": "1; mode=block" },
+        { "key": "Referrer-Policy",           "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy",        "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    },
+    {
+      "source": "/styles.css",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/script.js",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
     }
   ]
 }

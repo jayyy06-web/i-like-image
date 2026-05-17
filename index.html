@@ -1,36 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- ═══ CORE ═══ -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>i like image — Smart Image Tools for E-Commerce</title>
-<meta name="description" content="Free online image tools for e-commerce: compress, convert, and resize images in bulk. Supports PNG, JPG, WebP. Amazon, Flipkart, Shopify presets included.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- ═══ PRIMARY SEO ═══ -->
+<title>i like image — Free Online Image Compressor, Converter &amp; Resizer for E-Commerce</title>
+<meta name="description" content="Free bulk image tools for e-commerce sellers. Compress PNG/JPG/WebP, convert formats, resize with Amazon, Flipkart, Meesho &amp; Shopify presets. No upload limit, no watermark, 100% free.">
+<meta name="keywords" content="image compressor online, image converter, resize image, bulk image resize, Amazon product image resize, Flipkart image size, Shopify image optimize, WebP converter, compress image without quality loss, free image tools, e-commerce image tools, PNG to JPG, JPG to WebP">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="author" content="i like image">
+<meta name="theme-color" content="#7c6dfa">
+<link rel="canonical" href="https://i-like-image.vercel.app/">
+
+<!-- ═══ OPEN GRAPH (Facebook / LinkedIn / WhatsApp) ═══ -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://i-like-image.vercel.app/">
+<meta property="og:site_name" content="i like image">
+<meta property="og:title" content="i like image — Free Image Tools for E-Commerce Sellers">
+<meta property="og:description" content="Compress, convert, and resize product images in bulk. Amazon 1000×1000, Flipkart 500×500, Shopify 2048×2048 presets. Smart WebP compression. 100% free &amp; private.">
+<meta property="og:image" content="https://i-like-image.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="i like image — Smart Image Tools for E-Commerce">
+<meta property="og:locale" content="en_IN">
+
+<!-- ═══ TWITTER CARD ═══ -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ilikeimage">
+<meta name="twitter:title" content="i like image — Free Image Tools for E-Commerce">
+<meta name="twitter:description" content="Bulk compress, convert &amp; resize product images for Amazon, Flipkart, Meesho &amp; Shopify. Smart WebP mode. 100% free.">
+<meta name="twitter:image" content="https://i-like-image.vercel.app/og-image.png">
+
+<!-- ═══ STRUCTURED DATA — WebApplication (Google Rich Results) ═══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "i like image",
+  "url": "https://i-like-image.vercel.app/",
+  "description": "Free online bulk image tools for e-commerce: compress PNG, JPG and WebP images without quality loss, convert between formats, and resize with Amazon, Flipkart, Meesho and Shopify presets.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript. Works in Chrome, Firefox, Safari, Edge.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "INR"
+  },
+  "featureList": [
+    "Smart WebP compression with binary-search quality optimiser",
+    "Bulk image compression with target file size",
+    "PNG to JPG, JPG to WebP format conversion",
+    "Resize images to Amazon 1000x1000, Flipkart 500x500, Shopify 2048x2048",
+    "All-in-One: compress + resize + enhance in one click",
+    "ICC colour profile preservation",
+    "EXIF auto-rotation fix",
+    "Batch rename and ZIP download",
+    "Dark and light theme"
+  ],
+  "creator": {
+    "@type": "Organization",
+    "name": "i like image"
+  }
+}
+</script>
+
+<!-- ═══ PWA / FAVICON ═══ -->
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%237c6dfa'/><text x='50%25' y='55%25' font-size='18' text-anchor='middle' dominant-baseline='middle' fill='white' font-family='sans-serif' font-weight='bold'>i</text></svg>">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="i like image">
+
+<!-- ═══ PERFORMANCE — Resource Hints ═══ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+<!-- ═══ FONTS & STYLES ═══ -->
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<nav>
-  <div class="logo">i <span>like</span> image</div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" data-tab="compress" onclick="switchTab('compress', this)"><i class="fa fa-compress-alt" style="margin-right:5px;font-size:11px"></i>Compress</button>
-    <button class="nav-tab" data-tab="convert" onclick="switchTab('convert', this)"><i class="fa fa-exchange-alt" style="margin-right:5px;font-size:11px"></i>Convert</button>
-    <button class="nav-tab" data-tab="resize" onclick="switchTab('resize', this)"><i class="fa fa-expand-alt" style="margin-right:5px;font-size:11px"></i>Resize</button>
+<!-- ═══ SKIP NAVIGATION (Accessibility) ═══ -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- ═══ SITE HEADER ═══ -->
+<header role="banner">
+<nav aria-label="Main navigation">
+  <a href="/" class="logo" aria-label="i like image — Home">i <span>like</span> image</a>
+  <div class="nav-tabs" role="tablist" aria-label="Image tool tabs">
+    <button class="nav-tab active" role="tab" aria-selected="true"  aria-controls="panel-compress" data-tab="compress" onclick="switchTab('compress', this)"><i class="fa fa-compress-alt" aria-hidden="true" style="margin-right:5px;font-size:11px"></i>Compress</button>
+    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-convert" data-tab="convert"  onclick="switchTab('convert', this)"><i class="fa fa-exchange-alt" aria-hidden="true" style="margin-right:5px;font-size:11px"></i>Convert</button>
+    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-resize"  data-tab="resize"   onclick="switchTab('resize', this)"><i class="fa fa-expand-alt" aria-hidden="true" style="margin-right:5px;font-size:11px"></i>Resize</button>
+    <button class="nav-tab" role="tab" aria-selected="false" aria-controls="panel-custom"  data-tab="custom"   onclick="switchTab('custom', this)"><i class="fa fa-magic" aria-hidden="true" style="margin-right:5px;font-size:11px"></i>All-in-One</button>
   </div>
   <div class="nav-right">
-    <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
-      <div id="backendDot" style="width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0"></div>
+    <div style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;" aria-live="polite" aria-label="Backend status">
+      <div id="backendDot" style="width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0" aria-hidden="true"></div>
       <span id="backendLbl" style="font-size:11px;color:var(--text3);white-space:nowrap">Checking backend...</span>
     </div>
-    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">
-      <i class="fa fa-moon" id="themeIcon"></i>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle dark/light theme" title="Toggle theme">
+      <i class="fa fa-moon" id="themeIcon" aria-hidden="true"></i>
     </button>
   </div>
 </nav>
+</header>
 
-<main>
+<main id="main-content" role="main">
+
+<!-- Visually-hidden H1 for SEO — crawlers need it, users see the logo -->
+<h1 class="visually-hidden">i like image — Free Online Image Compressor, Converter &amp; Resizer for E-Commerce</h1>
 
   <!-- ═══════════════════════ COMPRESS PANEL ═══════════════════════ -->
   <div class="panel active" id="panel-compress">
@@ -88,11 +175,14 @@
           <span style="font-size:10px;font-weight:400;color:var(--text3);margin-left:4px">(optional)</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-          <input type="number" id="targetKB" placeholder="e.g. 500" min="10" max="51200" style="flex:1">
-          <span style="font-size:13px;color:var(--text2);flex-shrink:0;font-weight:600">KB</span>
+          <input type="number" id="targetKB" placeholder="e.g. 500" min="1" style="flex:1">
+          <button id="unitToggleBtn" onclick="toggleTargetUnit()" title="Click to switch KB / MB"
+            style="flex-shrink:0;padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--accent);font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition);letter-spacing:0.5px;"
+            onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'"
+          >KB</button>
         </div>
         <div style="margin-top:8px;font-size:11px;color:var(--text3)">
-          Leave blank to auto-optimize. Binary search finds best quality to hit target.
+          Leave blank to auto-optimize. Enter size in <span id="unitHint" style="color:var(--accent2);font-weight:600">KB</span> (e.g. 500 KB = 0.5 MB).
         </div>
       </div>
       <div class="setting-card">
@@ -404,6 +494,141 @@
     </div>
   </div>
 
+  <!-- ═══════════════════════ CUSTOM (ALL-IN-ONE) PANEL ═══════════════════════ -->
+  <div class="panel" id="panel-custom">
+    <div class="drop-zone" id="dropZone-custom" onclick="triggerInput('custom')">
+      <input type="file" id="fileInput-custom" multiple accept="image/*">
+      <div class="drop-icon"><i class="fa fa-magic"></i></div>
+      <div class="drop-title">All-in-One Image Processor</div>
+      <div class="drop-sub">Compress, enhance, convert, and resize all at once</div>
+    </div>
+
+    <div style="height:1.5rem"></div>
+
+    <div class="settings-grid">
+      <!-- Compress & Convert -->
+      <div class="setting-card">
+        <div class="setting-label">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="custom-do-compress" checked> <i class="fa fa-compress-alt"></i> Compress & Convert
+          </label>
+        </div>
+        <div style="margin-top:1rem">
+          <select id="custom-format" style="margin-bottom:10px">
+            <option value="smart">Smart Auto (Best Quality & Size)</option>
+            <option value="image/webp">WebP — Best compression</option>
+            <option value="image/jpeg">JPEG — Best for photos</option>
+            <option value="image/png">PNG — Lossless, transparency</option>
+          </select>
+          <div class="range-wrap" style="margin-top:1.5rem">
+            <span class="range-display" id="qualDisp-custom">90%</span>
+            <input type="range" min="10" max="100" value="90" id="custom-quality"
+              oninput="document.getElementById('qualDisp-custom').textContent=this.value+'%'">
+          </div>
+          <!-- Target Size with KB/MB toggle -->
+          <div style="margin-top:14px">
+            <div style="font-size:11px;font-weight:600;color:var(--text3);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:6px">
+              <i class="fa fa-bullseye" style="margin-right:4px"></i>Target Size <span style="font-weight:400;color:var(--text3)">(optional)</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <input type="number" id="custom-targetSize" placeholder="e.g. 500" min="1" style="flex:1">
+              <button id="customUnitToggleBtn" onclick="toggleCustomUnit()" title="Click to switch KB / MB"
+                style="flex-shrink:0;padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--accent);font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition);letter-spacing:0.5px;"
+                onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'"
+              >KB</button>
+            </div>
+            <div style="margin-top:6px;font-size:11px;color:var(--text3)">
+              Leave blank to auto. Enter in <span id="customUnitHint" style="color:var(--accent2);font-weight:600">KB</span>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resize -->
+      <div class="setting-card">
+        <div class="setting-label">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="custom-do-resize"> <i class="fa fa-expand-alt"></i> Resize
+          </label>
+        </div>
+        <div class="presets-row" style="margin-top:1rem">
+          <button class="preset-btn" onclick="applyPreset(1000,1000,this,'custom')">Amazon</button>
+          <button class="preset-btn" onclick="applyPreset(500,500,this,'custom')">Flipkart</button>
+          <button class="preset-btn" onclick="applyPreset(800,800,this,'custom')">Meesho</button>
+          <button class="preset-btn" onclick="applyPreset(2048,2048,this,'custom')">Shopify</button>
+          <button class="preset-btn" onclick="applyPreset(0,0,this,'custom')">Custom</button>
+        </div>
+        <div class="size-inputs" style="margin-top:1rem">
+          <input type="number" id="custom-width" placeholder="Width" min="1">
+          <span class="size-x">x</span>
+          <input type="number" id="custom-height" placeholder="Height" min="1">
+        </div>
+        <div style="margin-top:10px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text2)">
+            <input type="checkbox" id="custom-keep-ratio" checked style="width:auto;accent-color:var(--accent)">
+            Maintain aspect ratio
+          </label>
+        </div>
+      </div>
+
+      <!-- Enhance -->
+      <div class="setting-card">
+        <div class="setting-label">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" id="custom-do-enhance"> <i class="fa fa-star"></i> Enhance
+          </label>
+        </div>
+        <div style="margin-top:1rem">
+          <select id="custom-enhance-type">
+            <option value="auto">Auto Enhance</option>
+            <option value="sharpness">Sharpen</option>
+            <option value="color">Vibrant Colors</option>
+            <option value="contrast">High Contrast</option>
+          </select>
+          <div style="margin-top:10px;font-size:11px;color:var(--text3)">
+            Applies professional image enhancement filters
+          </div>
+        </div>
+      </div>
+
+      <!-- Batch Rename -->
+      <div class="setting-card">
+        <div class="setting-label"><i class="fa fa-tag"></i> Batch Rename</div>
+        <input type="text" id="renamePrefix-custom" placeholder="e.g. product, SKU001" maxlength="40" style="margin-top:0.5rem">
+        <div class="preview-name">
+          Preview: <span id="renamePreview-custom">original_name.jpg</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-primary" id="processBtn-custom" onclick="processFiles('custom')" disabled>
+        <i class="fa fa-bolt"></i> Process All
+      </button>
+      <button class="btn-secondary" onclick="clearFiles('custom')">
+        <i class="fa fa-trash"></i> Clear
+      </button>
+      <div class="progress-bar-wrap" id="progressWrap-custom" style="display:none">
+        <div class="progress-bar-fill" id="progressFill-custom"></div>
+      </div>
+      <div class="file-count" id="fileCount-custom">
+        <span id="fileCountNum-custom">0</span> files
+      </div>
+    </div>
+
+    <div class="section-title" id="fileListTitle-custom" style="display:none">
+      <i class="fa fa-images"></i> Files
+    </div>
+    <div class="file-list" id="fileList-custom"></div>
+
+    <div class="download-bar" id="downloadBar-custom" style="display:none">
+      <button class="btn-download" id="downloadBtn-custom" onclick="downloadAll('custom')" disabled>
+        <i class="fa fa-download"></i> Download All (ZIP)
+      </button>
+      <span style="font-size:12px;color:var(--text2)">All processed images ready</span>
+    </div>
+  </div>
+
 </main>
 
 <!-- Mobile Bottom Nav -->
@@ -420,13 +645,29 @@
     <i class="fa fa-expand-alt"></i>
     <span>Resize</span>
   </button>
+  <button class="mobile-nav-btn" onclick="switchTab('custom', this)" data-tab="custom" aria-label="All-in-One image processor">
+    <i class="fa fa-magic" aria-hidden="true"></i>
+    <span>All-in-One</span>
+  </button>
 </nav>
+
+<!-- ═══ SITE FOOTER ═══ -->
+<footer style="text-align:center;padding:2rem 1rem 6rem;font-size:12px;color:var(--text3);border-top:1px solid var(--border);margin-top:2rem" role="contentinfo">
+  <p style="margin-bottom:6px">
+    <strong style="color:var(--text2)">i like image</strong> — Free online image tools for e-commerce sellers.
+  </p>
+  <p>Compress &bull; Convert &bull; Resize &bull; Enhance &bull; All-in-One</p>
+  <p style="margin-top:8px">
+    <a href="https://i-like-image.vercel.app/" style="color:var(--accent2);text-decoration:none" rel="noopener">i-like-image.vercel.app</a>
+    &nbsp;&bull;&nbsp; No sign-up &bull; No watermark &bull; 100% free
+  </p>
+</footer>
 
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- JSZip for bulk download -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<!-- JSZip for bulk download (deferred so it doesn't block render) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 </body>
 </html>

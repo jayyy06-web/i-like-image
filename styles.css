@@ -1,3 +1,20 @@
+/* ── SEO & ACCESSIBILITY UTILITIES ── */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: -9999px; top: 8px;
+  background: var(--accent); color: #fff;
+  padding: 8px 18px; border-radius: 8px;
+  font-weight: 700; font-size: 13px;
+  z-index: 9999; text-decoration: none;
+}
+.skip-link:focus { left: 12px; }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -66,7 +83,9 @@
     font-size: 1.25rem; font-weight: 800;
     color: var(--text);
     letter-spacing: -0.5px;
+    text-decoration: none;   /* works when logo is <a> */
   }
+  .logo:visited { color: var(--text); }
   .logo span { color: var(--accent2); }
 
   .nav-tabs {

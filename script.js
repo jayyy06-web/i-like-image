@@ -2,7 +2,8 @@
 const state = {
   compress: { files: [], processed: [] },
   convert:  { files: [], processed: [] },
-  resize:   { files: [], processed: [] }
+  resize:   { files: [], processed: [] },
+  custom:   { files: [], processed: [] }
 };
 
 // ── Compress Mode (smart | manual) ──
@@ -16,6 +17,43 @@ function setCompressMode(mode) {
   document.getElementById('modeBtn-manual').classList.toggle('active', mode === 'manual');
 }
 
+// ── KB / MB Unit Toggle ──
+let targetUnit = 'KB';
+function toggleTargetUnit() {
+  targetUnit = targetUnit === 'KB' ? 'MB' : 'KB';
+  const btn  = document.getElementById('unitToggleBtn');
+  const hint = document.getElementById('unitHint');
+  const inp  = document.getElementById('targetKB');
+  btn.textContent  = targetUnit;
+  hint.textContent = targetUnit;
+  // Convert existing value so the user sees the equivalent in the new unit
+  const val = parseFloat(inp.value);
+  if (!isNaN(val) && val > 0) {
+    inp.value = targetUnit === 'MB'
+      ? parseFloat((val / 1024).toFixed(3))
+      : Math.round(val * 1024);
+  }
+  inp.placeholder = targetUnit === 'MB' ? 'e.g. 0.5' : 'e.g. 500';
+}
+
+// ── KB / MB Unit Toggle (All-in-One panel) ──
+let customTargetUnit = 'KB';
+function toggleCustomUnit() {
+  customTargetUnit = customTargetUnit === 'KB' ? 'MB' : 'KB';
+  const btn  = document.getElementById('customUnitToggleBtn');
+  const hint = document.getElementById('customUnitHint');
+  const inp  = document.getElementById('custom-targetSize');
+  btn.textContent  = customTargetUnit;
+  hint.textContent = customTargetUnit;
+  const val = parseFloat(inp.value);
+  if (!isNaN(val) && val > 0) {
+    inp.value = customTargetUnit === 'MB'
+      ? parseFloat((val / 1024).toFixed(3))
+      : Math.round(val * 1024);
+  }
+  inp.placeholder = customTargetUnit === 'MB' ? 'e.g. 2' : 'e.g. 500';
+}
+
 // ── Theme ──
 let darkMode = true;
 function toggleTheme() {
@@ -27,11 +65,13 @@ function toggleTheme() {
 // ── Tab Switch ──
 function switchTab(tab, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
   document.querySelectorAll('.mobile-nav-btn').forEach(t => t.classList.remove('active'));
   document.getElementById('panel-' + tab).classList.add('active');
-  // Sync both nav bars by data-tab attribute
-  document.querySelectorAll('[data-tab="' + tab + '"]').forEach(el => el.classList.add('active'));
+  document.querySelectorAll('[data-tab="' + tab + '"]').forEach(el => {
+    el.classList.add('active');
+    if (el.getAttribute('role') === 'tab') el.setAttribute('aria-selected','true');
+  });
 }
 
 // ── File Input ──
@@ -39,7 +79,7 @@ function triggerInput(tab) {
   document.getElementById('fileInput-' + tab).click();
 }
 
-['compress','convert','resize'].forEach(tab => {
+['compress','convert','resize','custom'].forEach(tab => {
   const input = document.getElementById('fileInput-' + tab);
   const zone  = document.getElementById('dropZone-' + tab);
 
@@ -200,7 +240,7 @@ function resetPreview() {
 }
 
 // ── Python Backend URL ──
-const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 const API = isLocal ? 'http://localhost:5000' : '';
 
 // ── Backend health check on load ──
@@ -290,8 +330,11 @@ async function processFiles(tab) {
         if (compressMode === 'smart') {
           // ── SMART COMPRESS ──
           fd.append('max_quality', document.getElementById('smartQuality').value);
-          const targetKB = document.getElementById('targetKB').value;
-          fd.append('target_kb', targetKB ? targetKB : '0');
+          const rawTarget = parseFloat(document.getElementById('targetKB').value);
+          const targetKBval = (!isNaN(rawTarget) && rawTarget > 0)
+            ? (targetUnit === 'MB' ? Math.round(rawTarget * 1024) : Math.round(rawTarget))
+            : 0;
+          fd.append('target_kb', targetKBval);
           result = await callPythonAPI('/api/smart-compress', fd);
         } else {
           // ── MANUAL COMPRESS ──
@@ -315,6 +358,30 @@ async function processFiles(tab) {
         fd.append('keep_ratio', document.getElementById('keepRatio').checked ? 'true' : 'false');
         fd.append('quality',    document.getElementById('quality-resize').value);
         result = await callPythonAPI('/api/resize', fd);
+
+      } else if (tab === 'custom') {
+        const fd = new FormData();
+        fd.append('file', file);
+        
+        fd.append('do_compress', document.getElementById('custom-do-compress').checked ? 'true' : 'false');
+        fd.append('format',      document.getElementById('custom-format').value);
+        fd.append('quality',     document.getElementById('custom-quality').value);
+        // Target size: convert MB → KB if needed
+        const rawCustomTarget = parseFloat(document.getElementById('custom-targetSize').value);
+        const customTargetKB = (!isNaN(rawCustomTarget) && rawCustomTarget > 0)
+          ? (customTargetUnit === 'MB' ? Math.round(rawCustomTarget * 1024) : Math.round(rawCustomTarget))
+          : 0;
+        fd.append('target_kb', customTargetKB);
+        
+        fd.append('do_resize',   document.getElementById('custom-do-resize').checked ? 'true' : 'false');
+        fd.append('width',       document.getElementById('custom-width').value || '0');
+        fd.append('height',      document.getElementById('custom-height').value || '0');
+        fd.append('keep_ratio',  document.getElementById('custom-keep-ratio').checked ? 'true' : 'false');
+        
+        fd.append('do_enhance',  document.getElementById('custom-do-enhance').checked ? 'true' : 'false');
+        fd.append('enhance_type',document.getElementById('custom-enhance-type').value);
+        
+        result = await callPythonAPI('/api/custom', fd);
       }
 
       const { blob, meta } = result;
@@ -350,7 +417,8 @@ async function processFiles(tab) {
       }
 
     } catch (err) {
-      statusEl.innerHTML = '<div class="status-dot error"></div><span style="color:var(--red);font-size:11px">' + (err.message || 'Error') + '</span>';
+      statusEl.innerHTML = '<div class="status-dot error"></div><span style="color:var(--red);font-size:11px" class="error-msg"></span>';
+      statusEl.querySelector('.error-msg').textContent = err.message || 'Error';
     }
 
     progFill.style.width = Math.round(((i + 1) / files.length) * 100) + '%';
@@ -381,17 +449,27 @@ async function processFiles(tab) {
 }
 
 // ── Preset ──
-function applyPreset(w, h, btn) {
+function applyPreset(w, h, btn, prefix = '') {
+  const wEl = document.getElementById(prefix ? prefix + '-width' : 'resizeW');
+  const hEl = document.getElementById(prefix ? prefix + '-height' : 'resizeH');
   if (w > 0) {
-    document.getElementById('resizeW').value = w;
-    document.getElementById('resizeH').value = h;
+    wEl.value = w;
+    hEl.value = h;
   } else {
-    document.getElementById('resizeW').value = '';
-    document.getElementById('resizeH').value = '';
-    document.getElementById('resizeW').focus();
+    wEl.value = '';
+    hEl.value = '';
+    wEl.focus();
   }
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
+  
+  if (btn) {
+    const row = btn.closest('.presets-row');
+    if (row) {
+      row.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    } else {
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    }
+    btn.classList.add('active');
+  }
 }
 
 // ── Rename Preview ──
@@ -422,9 +500,11 @@ async function downloadAll(tab) {
   if (processed.length === 1) {
     // Single file — direct download
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(processed[0].blob);
+    const url = URL.createObjectURL(processed[0].blob);
+    a.href = url;
     a.download = processed[0].name;
     a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 100);
     btn.disabled = false;
     btn.innerHTML = '<i class="fa fa-download"></i> Download All (ZIP)';
     showToast('Download started!', 'success');
@@ -436,9 +516,11 @@ async function downloadAll(tab) {
 
   const content = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(content);
+  const url = URL.createObjectURL(content);
+  a.href = url;
   a.download = 'i-like-image-' + tab + '.zip';
   a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 100);
 
   btn.disabled = false;
   btn.innerHTML = '<i class="fa fa-download"></i> Download All (ZIP)';
