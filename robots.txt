@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://i-like-image.vercel.app/sitemap.xml
+Sitemap: https://i-likee-image.vercel.app/sitemap.xml
 
 # Block irrelevant crawling of static assets
 Disallow: /*.py$
